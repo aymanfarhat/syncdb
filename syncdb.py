@@ -31,4 +31,4 @@ file.close()
 
 print "Importing to local database..."
 
-os.system("mysql -u {0} {1} < {2}",format(config.local_db_username, config.local_db_name, config.dumpfile))
+os.system("mysql -u {0} {1} < {2}".format(config.local_db_username, config.local_db_name, config.dumpfile))
