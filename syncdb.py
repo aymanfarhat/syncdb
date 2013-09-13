@@ -13,15 +13,13 @@ print "Dumping database..."
 def ssh(cmd):
     out = []
     msg = [stdin, stdout, stderr] = client.exec_command(cmd)
-    for item in msg:
-        try:
-            for line in item:
-                out.append(line.strip('\n'))
-        except: pass
 
-    return(list(out))
+    for line in msg[1]:
+        out.append(line.strip('\n'))
 
-dump = ssh("mysqldump -u {0} -p{1} {2} --skip-comments".format(config.server_db_username, config.server_db_password, config.server_db_name))
+    return out
+
+dump = ssh("mysqldump -u {0} --password='{1}' {2} --skip-comments".format(config.server_db_username, config.server_db_password, config.server_db_name))
 
 print "Saving to dump.sql..."
 
