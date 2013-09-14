@@ -5,6 +5,6 @@ Session.vim
 .netrwhist
 *~
 # Other python and project files
-*dump.sql
-*config.py
+*.sql
 *.pyc
+*dev_config.json
