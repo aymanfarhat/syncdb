@@ -21,7 +21,7 @@ def ssh(cmd):
 
 dump = ssh("mysqldump -u {0} --password='{1}' {2} --skip-comments".format(config.server_db_username, config.server_db_password, config.server_db_name))
 
-print "Saving to dump.sql..."
+print "Saving to {0}".format(dumpfile)
 
 file = open(config.dumpfile, 'w')
 file.write("".join(dump))
