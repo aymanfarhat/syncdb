@@ -52,6 +52,7 @@ if __name__ == "__main__":
     config_list = load_config("config.json")
 
     for config in config_list:
+        print "Syncing {0}".format(config["description"])
         print "Connecting to host..."
 
         client = ssh_connect(config)
@@ -69,10 +70,9 @@ if __name__ == "__main__":
         dumpfile = get_dump_filename(remote_dbname)
         write_dump_to_file(dumpfile, dump)
 
-        print "Importing to local database..."
-
-        local_dbname = config["local"]["db_name"]
-        local_db_username = config["local"]["db_username"]
-        local_db_pass = config["local"]["db_password"]
-
-        os.system("mysql -u {0} {1} < {2}".format(local_db_username, local_dbname, dumpfile))
+        if config["import"]:
+            print "Importing to local database..."
+            local_dbname = config["local"]["db_name"]
+            local_db_username = config["local"]["db_username"]
+            local_db_pass = config["local"]["db_password"]
+            os.system("mysql -u {0} {1} < {2}".format(local_db_username, local_dbname, dumpfile))
