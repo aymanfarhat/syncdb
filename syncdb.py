@@ -76,3 +76,5 @@ if __name__ == "__main__":
             local_db_username = config["local"]["db_username"]
             local_db_pass = config["local"]["db_password"]
             os.system("mysql -u {0} {1} < {2}".format(local_db_username, local_dbname, dumpfile))
+
+    end = raw_input("Press any key to continue...")
