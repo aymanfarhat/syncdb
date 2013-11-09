@@ -14,6 +14,8 @@
        "db_username":"",
        "db_password":""
    },
+   "description":"",
+   "import":true,
    "sync_mode":"down"
  }
 ]
