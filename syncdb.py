@@ -1,8 +1,8 @@
 from datetime import datetime as date
+import time
 import paramiko
 import os
 import json
-
 
 def ssh_cmd(client, cmd):
     """
@@ -53,13 +53,6 @@ def get_dump_filename(db_name):
     return dumpfile
 
 
-def write_dump_to_file(file_name, dump):
-    """Write string dump to file """
-    file = open(file_name, 'w')
-    file.write("".join(dump))
-    file.close()
-
-
 if __name__ == "__main__":
 
     config_list = load_config("dev_config.json")
@@ -76,14 +69,22 @@ if __name__ == "__main__":
         remote_db_username = config["remote"]["db_username"]
         remote_db_pass = config["remote"]["db_password"]
 
+        temp_filename = "syncdb_{0}.sql".format(int(time.time() * 1000))
+
         dump = ssh_cmd(client, "mysqldump -u {0} --password='{1}' {2} \
-                --skip-comments".format(remote_db_username,
-                                        remote_db_pass, remote_dbname))
+                 --skip-comments > {3}".format(remote_db_username,
+                                              remote_db_pass, remote_dbname, 
+                                              temp_filename))
 
         print "saving to file..."
-
+        
         dumpfile = get_dump_filename(remote_dbname)
-        write_dump_to_file(dumpfile, dump)
+
+        ftp = client.open_sftp()
+        ftp.get(temp_filename, dumpfile)
+        ftp.close()
+
+        rm = ssh_cmd(client, "rm {0}".format(temp_filename))
 
         if config["import"]:
             print "Importing to local database..."
