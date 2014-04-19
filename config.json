@@ -16,6 +16,7 @@
    },
    "description":"",
    "import":true,
+   "ignore-table":[],
    "sync_mode":"down"
  }
 ]

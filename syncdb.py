@@ -70,10 +70,18 @@ if __name__ == "__main__":
         remote_db_pass = config["remote"]["db_password"]
 
         temp_filename = "syncdb_{0}.sql".format(int(time.time() * 1000))
+        
+        ignore_tbl_list = []
+
+        for tbl in config["ignore-table"]:
+            ignore_tbl_list.append("--ignore-table="+remote_dbname+"."+tbl)
+
+        ignore_tables = " ".join(ignore_tbl_list)
 
         dump = ssh_cmd(client, "mysqldump -u {0} --password='{1}' {2} \
-                 --skip-comments > {3}".format(remote_db_username,
+                {3} --skip-comments > {4}".format(remote_db_username,
                                               remote_db_pass, remote_dbname, 
+                                              ignore_tables,
                                               temp_filename))
 
         print "saving to file..."
