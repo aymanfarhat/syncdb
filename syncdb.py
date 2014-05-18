@@ -99,7 +99,15 @@ if __name__ == "__main__":
             local_dbname = config["local"]["db_name"]
             local_db_username = config["local"]["db_username"]
             local_db_pass = config["local"]["db_password"]
-            os.system("mysql -u {0} {1} < {2}".format(local_db_username,
-                                                      local_dbname, dumpfile))
+
+            if(local_db_pass == ""):
+                os.system("mysql -u {0} {1} < {2}".format(local_db_username,
+                                                            local_dbname, 
+                                                            dumpfile))
+            else:
+                os.system("mysql -u {0} -p{1} {2} < {3}".format(local_db_username,
+                                                            local_db_pass,
+                                                            local_dbname, 
+                                                            dumpfile))
 
     end = raw_input("Press enter to continue...")
