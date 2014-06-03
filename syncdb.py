@@ -48,7 +48,8 @@ def ssh_connect(config):
 def get_dump_filename(db_name):
     """Formats the dump file name """
     today = date.today().strftime("%y-%m-%d")
-    dumpfile = "{0}_{1}.sql".format(db_name, today)
+    time_sec = int(time.time() * 1000)
+    dumpfile = "{0}_{1}_{2}.sql".format(db_name, today, time_sec)
 
     return dumpfile
 
