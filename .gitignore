@@ -7,4 +7,4 @@ Session.vim
 # Other python and project files
 *.sql
 *.pyc
-*dev_config.json
+*config.json
