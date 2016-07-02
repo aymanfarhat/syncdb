@@ -56,7 +56,7 @@ def get_dump_filename(db_name):
 
 if __name__ == "__main__":
 
-    config_list = load_config("dev_config.json")
+    config_list = load_config("config.json")
 
     for config in config_list:
         print "Syncing {0}".format(config["description"])
