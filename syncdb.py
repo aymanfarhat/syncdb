@@ -37,10 +37,12 @@ def ssh_connect(config):
     remote_user = config["remote"]["username"]
     remote_pass = config["remote"]["password"]
 
+    k = paramiko.RSAKey.from_private_key_file(config['remote']['private_key_file'])
+
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(remote_address, port=remote_port,
-                   username=remote_user, password=remote_pass)
+                   username=remote_user, password=remote_pass, pkey=k)
 
     return client
 
@@ -67,11 +69,12 @@ if __name__ == "__main__":
         print "Dumping database..."
 
         remote_dbname = config["remote"]["db_name"]
+        remote_db_host = config['remote']['db_host']
         remote_db_username = config["remote"]["db_username"]
         remote_db_pass = config["remote"]["db_password"]
 
         temp_filename = "syncdb_{0}.sql".format(int(time.time() * 1000))
-        
+
         ignore_tbl_list = []
 
         for tbl in config["ignore-table"]:
@@ -79,14 +82,15 @@ if __name__ == "__main__":
 
         ignore_tables = " ".join(ignore_tbl_list)
 
-        dump = ssh_cmd(client, "mysqldump -u {0} --password='{1}' {2} \
-                {3} --skip-comments > {4}".format(remote_db_username,
-                                              remote_db_pass, remote_dbname, 
-                                              ignore_tables,
-                                              temp_filename))
+        dump = ssh_cmd(client, "mysqldump -u {0} -h {1} --password='{2}' {3} \
+                {4} --skip-comments > {5}".format(remote_db_username,
+                                                remote_db_host, 
+                                                remote_db_pass, remote_dbname, 
+                                                ignore_tables,
+                                                temp_filename))
 
         print "saving to file..."
-        
+
         dumpfile = get_dump_filename(remote_dbname)
 
         ftp = client.open_sftp()
